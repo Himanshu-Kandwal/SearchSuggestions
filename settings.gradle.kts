@@ -3,3 +3,6 @@ plugins {
 }
 rootProject.name = "searchsuggestion"
 
+
+//include(":searchsuggestion", ":sampleapp")
+include("library", ":sampleapp")
