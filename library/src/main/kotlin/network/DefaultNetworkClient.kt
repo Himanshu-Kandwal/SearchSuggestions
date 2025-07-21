@@ -6,7 +6,7 @@ import java.net.URI
 /**
  * Default implementation of [NetworkClient] to handle network calls
  */
-class DefaultHttpClient(private val httpClientConfig: HttpClientConfig) : NetworkClient {
+class DefaultNetworkClient(private val httpClientConfig: HttpClientConfig) : NetworkClient {
 
     override fun get(url: String): HttpResult {
         val queryURL = URI(url).toURL()
