@@ -1,6 +1,6 @@
 package cache
 
-class InMemoryTTLLRUCache(private val cacheConfig: CacheConfig = CacheConfig()) : SuggestionCache<String, CacheItem> {
+class InMemoryTTLLRUCache(private val cacheConfig: CacheConfig = CacheConfig()) : SuggestionCache {
 
     private val cache = object : LinkedHashMap<String, CacheItem>(cacheConfig.cacheSize, 0.75f, true) {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, CacheItem>?): Boolean { //remove the eldest entry when this cache size is bigger than configured cache size
