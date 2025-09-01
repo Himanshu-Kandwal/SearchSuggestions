@@ -12,7 +12,10 @@ class InMemoryTTLLRUCache(private val cacheConfig: CacheConfig = CacheConfig()) 
     override fun get(key: String): CacheItem? {
         val item = cache[key]
         item?.let {
-            if (isExpired(it)) return null
+            if (isExpired(it)) {
+                delete(key)
+                return null
+            }
             else return it
         }
         return null
