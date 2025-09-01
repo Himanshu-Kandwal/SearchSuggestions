@@ -9,7 +9,7 @@ import org.example.searchsuggestion.engine.SearchEngine
 
 class CachingSuggestionService(
     private val searchEngine: SearchEngine,
-    private val cache: SuggestionCache<String, CacheItem> = InMemoryTTLLRUCache(CacheConfig()),
+    private val cache: SuggestionCache = InMemoryTTLLRUCache(CacheConfig()),
 ) : SuggestionService {
 
     override fun getSuggestions(suggestionRequest: SuggestionRequest): List<String> {

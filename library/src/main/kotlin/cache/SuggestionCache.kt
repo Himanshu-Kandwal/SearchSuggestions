@@ -1,9 +1,9 @@
 package cache
 
 
-interface SuggestionCache<K, V> {
-    fun get(key: K): V?
-    fun put(key: K, suggestions: V)
-    fun delete(key: K): K?
-    fun contains(key: K): Boolean
+interface SuggestionCache {
+    fun get(key: String): CacheItem?
+    fun put(key: String, suggestions: CacheItem)
+    fun delete(key: String): String?
+    fun contains(key: String): Boolean
 }
