@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "org.hk"
-version = "1.0-SNAPSHOT"
+version = "v1.0.1"
 
 repositories {
     mavenCentral()
