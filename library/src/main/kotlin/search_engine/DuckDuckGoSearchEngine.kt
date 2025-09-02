@@ -3,11 +3,12 @@ package search_engine
 import network.HttpResult
 import network.NetworkClient
 import org.example.searchsuggestion.engine.SearchEngine
+import parser.DuckDuckGoSuggestionsParser
 import parser.SuggestionsParser
 import java.net.URLEncoder
 
 class DuckDuckGoSearchEngine(
-    private val networkClient: NetworkClient, private val parser: SuggestionsParser
+    private val networkClient: NetworkClient, private val parser: SuggestionsParser = DuckDuckGoSuggestionsParser()
 ) : SearchEngine {
 
     companion object {
