@@ -1,17 +1,21 @@
 # Realtime Search Suggestions Library
 
-A robust, extensible Kotlin library for fetching and caching search suggestions from multiple search engines (Google, DuckDuckGo). Designed for high performance, testability, and easy integration into JVM applications.
+A robust, extensible Kotlin library for fetching and caching search suggestions from multiple search engines (Google,
+DuckDuckGo). Designed for high performance, testability, and easy integration into JVM applications.
 
 ---
 
 ## Features
 
+- **Simple**: Realtime Search suggestions in just 3 lines of code (without customisation).
 - **Multi-Engine Support**: Pluggable architecture supporting Google and DuckDuckGo out of the box.
 - **Unified API**: Single interface for requesting suggestions, regardless of the underlying search engine.
-- **Configurable & Customizable Caching**: In-built In-memory TTL+LRU cache or plug in Custom Cache to minimize network calls and improve performance.
+- **Configurable & Customizable Caching**: In-built In-memory TTL+LRU cache or plug in Custom Cache to minimize network
+  calls and improve performance.
 - **Customizable Networking**: Easily swap or configure the HTTP client.
 - **Extensible Parsing**: Modular suggestion parsers for different search engine response formats.
-- **Test Coverage**: Includes comprehensive unit tests for core components and parsers.
+
+[//]: # (- **Test Coverage**: Includes comprehensive unit tests for core components and parsers.)
 
 ---
 
@@ -62,35 +66,79 @@ dependencies {
 }
 ```
 
-### 2. Configure the Service
+### 2. Using Library
+
+We have options to customise or not.
+
+#### 1. Use without Customizing
 
 ```kotlin
-val suggestionService = SuggestionServiceBuilder()
-    .withCaching()
-    .withSearchEngine(SearchEngineType.DUCKDUCKGO)
-    .build() // customize as per requirements
+fun main() {
+    //step 1 - get suggestion service
+    val defaultSuggestionService = SuggestionServiceBuilder().build() //returns default/un-customised service
+
+    //step 2 - make suggestion request
+    val suggestionRequest = SuggestionRequest("elon musk", 5) //pass query and limit for result
+
+    //step 3 - call getSuggestions() to and pass suggestionRequest
+
+    val suggestionsList = defaultSuggestionService.getSuggestions(suggestionRequest)
+
+    //Optional step 4 - print them
+    println(suggestionsList)
+
+    //output = [elon musk, elon musk net worth, elon musk age, elon musk news, elon musk wife]
+
+}
 ```
 
-### 3. Basic Usage
-
-#### Fetching Suggestions (Default: DuckDuckGo)
+#### 1. Use with Customization
 
 ```kotlin
-val suggestionService = SuggestionServiceBuilder().build()
-val suggestions = suggestionService.getSuggestions(SuggestionRequest("apple", 5))
-println(suggestions)
+fun main() {
+    //step 1 - get suggestion service with customisation as per needs e.g caching, search engine etc
+    val defaultSuggestionService =
+        SuggestionServiceBuilder().withCaching().withSearchEngine(SearchEngineType.GOOGLE).build()
+    ...
+    //same as above
+    ...
+
+    // Output = [elon musk, elon musk net worth, elon musk net worth in rupees, elon musk children, elon musk father]
+}
 ```
 
-#### Using Google as the Search Engine
+## 3. Customization
 
+### Change or Integrated Search Engine
+
+#### In-built search engines:
 ```kotlin
 
 val googleService = SuggestionServiceBuilder()
-    .withSearchEngine(SearchEngineType.GOOGLE)
+    .withSearchEngine(SearchEngineType.GOOGLE) //pass Enum here currently supports Google and DuckDuckGo
     .build()
 
-val suggestions = googleService.getSuggestions(SuggestionRequest("banana", 5))
-println(suggestions)
+
+```
+
+#### Custom search engines:
+```kotlin
+Note: Custom Search Engine must provide their own Parser i.e implemention of SuggestionsParser interface
+
+//Step 1 - Implement SearchEngine interface
+
+class CustomImplSamples : SearchEngine {
+  override fun getSearchSuggestions(query: String, maxSuggestions: Int): List<String> {
+    TODO("Not yet implemented")
+  }
+}
+
+//Step 2 - Pass it to builder
+val googleService = SuggestionServiceBuilder()
+    .withSearchEngine(CustomImplSamples()) //passing custom search engine's concrete implementation
+    .build()
+
+
 ```
 
 #### Enabling Caching
@@ -105,24 +153,64 @@ val suggestions = cachedService.getSuggestions(SuggestionRequest("mango", 5))
 println(suggestions)
 ```
 
-#### Custom Cache Configuration
+### Custom Cache Configuration
 
+#### Custom cache size and duration:
 ```kotlin
 
+//step 1 - create cache config
 val customCacheConfig = CacheConfig(cacheSize = 200, cacheTTL = 10 * 60 * 1000) // 10 minutes
+
+// step 2 - pass cache config here
 val service = SuggestionServiceBuilder()
-    .withCaching(customCacheConfig)
+    .withCaching(customCacheConfig) 
+    .build()
+```
+#### Custom cache implementation:
+```kotlin
+//step 1 - Implement the Suggestion cache interface
+class CustomCacheImpl : SuggestionCache {
+                ....
+  //methods implemented here
+                ....
+}
+
+// step 2 - pass custom cache impl here
+val service = SuggestionServiceBuilder()
+  .withCaching(CustomCacheImpl())
+  .build()
+```
+
+### Customize Networking
+We have two ways to customize it,
+#### 1. Changing http configuration
+Using HttpClientConfig we can pass timeout, user agent etc
+```kotlin
+// step 1 : create custom http config and pass into Default network client
+val customHttpConfig = HttpClientConfig(connectTimeoutMillis = 3000)
+val customNetworkClient = DefaultNetworkClient(customHttpConfig) //
+
+//Step 2: Pass customised client to builder
+val service = SuggestionServiceBuilder()
+    .withNetworkClient(customNetworkClient) //here
     .build()
 ```
 
-#### Custom Network Client
+#### 2. Using custom network client 
 
 ```kotlin
+//Step 1: Implement NetworkClient interface
+class CustomNetworkingClientImpl : NetworkClient {
+  override fun get(url: String): HttpResult {
+    TODO("Not yet implemented")
+  }
+}
 
-val customNetworkClient = DefaultNetworkClient(HttpClientConfig(connectTimeoutMillis = 3000))
+//Step  2: Pass CustomNetworkingClientImpl() to builder
 val service = SuggestionServiceBuilder()
-    .withNetworkClient(customNetworkClient)
-    .build()
+  .withNetworkClient(CustomNetworkingClientImpl()) //here
+  .build()
+
 ```
 
 ---
@@ -130,7 +218,8 @@ val service = SuggestionServiceBuilder()
 ## API Overview
 
 - [`SuggestionService`](src/main/kotlin/core/SuggestionService.kt): Main interface for fetching suggestions.
-- [`SuggestionServiceBuilder`](src/main/kotlin/core/SuggestionServiceBuilder.kt): Fluent builder for configuring the service.
+- [`SuggestionServiceBuilder`](src/main/kotlin/core/SuggestionServiceBuilder.kt): Fluent builder for configuring the
+  service.
 - [`SuggestionRequest`](src/main/kotlin/core/SuggestionRequest.kt): Data class for query and result count.
 - [`SearchEngineType`](src/main/kotlin/search_engine/SearchEngineType.kt): Enum for supported engines.
 - [`CacheConfig`](src/main/kotlin/cache/CacheConfig.kt): Cache size and TTL configuration.
@@ -139,9 +228,12 @@ val service = SuggestionServiceBuilder()
 
 ## Extending
 
-- **Add a new search engine**: Implement [`SearchEngine`](src/main/kotlin/search_engine/SearchEngine.kt) and plug it into the builder.
-- **Custom parser**: Implement [`SuggestionsParser`](src/main/kotlin/parser/SuggestionsParser.kt) for new response formats.
-- **Custom cache**: Implement [`SuggestionCache`](src/main/kotlin/cache/SuggestionCache.kt) for distributed or persistent caching.
+- **Add a new search engine**: Implement [`SearchEngine`](src/main/kotlin/search_engine/SearchEngine.kt) and plug it
+  into the builder.
+- **Custom parser**: Implement [`SuggestionsParser`](src/main/kotlin/parser/SuggestionsParser.kt) for new response
+  formats.
+- **Custom cache**: Implement [`SuggestionCache`](src/main/kotlin/cache/SuggestionCache.kt) for distributed or
+  persistent caching.
 
 ---
 
