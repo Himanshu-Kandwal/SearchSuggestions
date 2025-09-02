@@ -1,13 +1,9 @@
 package org.hk
 
-import core.SuggestionService
 import core.SuggestionServiceBuilder
-import network.DefaultNetworkClient
-import network.HttpClientConfig
 import org.example.searchsuggestion.core.SuggestionRequest
-import parser.GoogleSuggestionsParser
-import search_engine.GoogleSearchEngine
 import search_engine.SearchEngineType
+
 
 fun main() {
 

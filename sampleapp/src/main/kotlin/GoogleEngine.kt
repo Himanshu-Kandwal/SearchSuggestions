@@ -1,6 +1,5 @@
 package org.hk
 
-import core.SuggestionService
 import core.SuggestionServiceBuilder
 import network.DefaultNetworkClient
 import network.HttpClientConfig
