@@ -1,5 +1,4 @@
 # Realtime Search Suggestions Library
-(Under Construction 🚧)
 
 A robust, extensible Kotlin library for fetching and caching search suggestions from multiple search engines (Google, DuckDuckGo). Designed for high performance, testability, and easy integration into JVM applications.
 
@@ -9,38 +8,70 @@ A robust, extensible Kotlin library for fetching and caching search suggestions 
 
 - **Multi-Engine Support**: Pluggable architecture supporting Google and DuckDuckGo out of the box.
 - **Unified API**: Single interface for requesting suggestions, regardless of the underlying search engine.
-- **Configurable & Customizable Caching**:In-built In-memory TTL+LRU cache or plug in Custom Cache to minimize network calls and improve performance.
+- **Configurable & Customizable Caching**: In-built In-memory TTL+LRU cache or plug in Custom Cache to minimize network calls and improve performance.
 - **Customizable Networking**: Easily swap or configure the HTTP client.
 - **Extensible Parsing**: Modular suggestion parsers for different search engine response formats.
-  #- **Test Coverage**: Includes comprehensive unit tests for core components and parsers.
+- **Test Coverage**: Includes comprehensive unit tests for core components and parsers.
 
 ---
 
 ## Use Cases
 
-- **Autocomplete**: Power search/autocomplete bars in desktop, web, or mobile apps e.g Browser.
+- **Autocomplete**: Power search/autocomplete bars in desktop, web, or mobile apps.
 - **Data Enrichment**: Fetch trending or related search queries for analytics or content recommendation.
 - **Research Tools**: Integrate with tools that analyze or visualize search trends.
-- **Custom Browsers**: Quickly add suggestion capabilities to search bar.
+- **Custom Browsers**: Quickly add suggestion capabilities to search bars.
 
 ---
 
-<!--
-  
+## Requirements
+
+- **Internet connectivity** (necessary to fetch live suggestions from Google or DuckDuckGo).
+- JVM 21+ and Kotlin 2.0+
+
+---
+
+## How it Works
+
+The library fetches search suggestions by:
+
+1. Sending a **network request** to the chosen search engine (Google or DuckDuckGo).
+2. Receiving the response JSON or plain text.
+3. **Parsing** the response using the respective `SuggestionsParser` implementation.
+4. **Returning a list of suggestions**.
+5. Optionally, storing results in an **in-memory TTL+LRU cache** to reduce redundant network calls.
+
+All of this is configurable through the `SuggestionServiceBuilder`.
+
+---
 
 ## Getting Started
 
 ### 1. Add as a Dependency
 
-If using as a local module in a multi-project Gradle build:
-
 ```kotlin
+// Add the JitPack repository
+repositories {
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+}
+
+// Add the library dependency
 dependencies {
-    implementation(project(":library"))
+    implementation("com.github.Himanshu-Kandwal.SearchSuggestions:library:v1.0.1") //use latest 
 }
 ```
 
-### 2. Basic Usage
+### 2. Configure the Service
+
+```kotlin
+val suggestionService = SuggestionServiceBuilder()
+    .withCaching()
+    .withSearchEngine(SearchEngineType.DUCKDUCKGO)
+    .build() // customize as per requirements
+```
+
+### 3. Basic Usage
 
 #### Fetching Suggestions (Default: DuckDuckGo)
 
@@ -127,24 +158,13 @@ val service = SuggestionServiceBuilder()
 - **Custom cache**: Implement [`SuggestionCache`](src/main/kotlin/cache/SuggestionCache.kt) for distributed or persistent caching.
 
 ---
-    
 
-## Testing
+## Contributing
 
-Run all tests with:
-
-```sh
-./gradlew test
-```
-
----
-
-## License
-
-This library is licensed under the Apache 2.0 License.
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/NewFeature`).
+3. Commit your changes (`git commit -m 'Add new feature'`).
+4. Push to the branch (`git push origin feature/NewFeature`).
+5. Create a Pull Request.
 
 ---
-
-For more details, see the source code and unit tests.
-
--->
