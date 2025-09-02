@@ -76,9 +76,6 @@ val suggestionService = SuggestionServiceBuilder()
 #### Fetching Suggestions (Default: DuckDuckGo)
 
 ```kotlin
-import core.SuggestionServiceBuilder
-import org.example.searchsuggestion.core.SuggestionRequest
-
 val suggestionService = SuggestionServiceBuilder().build()
 val suggestions = suggestionService.getSuggestions(SuggestionRequest("apple", 5))
 println(suggestions)
@@ -87,9 +84,6 @@ println(suggestions)
 #### Using Google as the Search Engine
 
 ```kotlin
-import core.SuggestionServiceBuilder
-import search_engine.SearchEngineType
-import org.example.searchsuggestion.core.SuggestionRequest
 
 val googleService = SuggestionServiceBuilder()
     .withSearchEngine(SearchEngineType.GOOGLE)
@@ -102,8 +96,6 @@ println(suggestions)
 #### Enabling Caching
 
 ```kotlin
-import core.SuggestionServiceBuilder
-import org.example.searchsuggestion.core.SuggestionRequest
 
 val cachedService = SuggestionServiceBuilder()
     .withCaching() // Uses default cache config (TTL, size)
@@ -116,9 +108,6 @@ println(suggestions)
 #### Custom Cache Configuration
 
 ```kotlin
-import core.SuggestionServiceBuilder
-import cache.CacheConfig
-import org.example.searchsuggestion.core.SuggestionRequest
 
 val customCacheConfig = CacheConfig(cacheSize = 200, cacheTTL = 10 * 60 * 1000) // 10 minutes
 val service = SuggestionServiceBuilder()
@@ -129,9 +118,6 @@ val service = SuggestionServiceBuilder()
 #### Custom Network Client
 
 ```kotlin
-import core.SuggestionServiceBuilder
-import network.DefaultNetworkClient
-import network.HttpClientConfig
 
 val customNetworkClient = DefaultNetworkClient(HttpClientConfig(connectTimeoutMillis = 3000))
 val service = SuggestionServiceBuilder()
