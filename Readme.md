@@ -92,7 +92,7 @@ fun main() {
 }
 ```
 
-#### 1. Use with Customization
+#### 2. Use with Customization
 
 ```kotlin
 fun main() {
@@ -111,7 +111,7 @@ fun main() {
 
 ### Change or Integrated Search Engine
 
-#### In-built search engines:
+#### 1. In-built search engines:
 ```kotlin
 
 val googleService = SuggestionServiceBuilder()
@@ -121,7 +121,7 @@ val googleService = SuggestionServiceBuilder()
 
 ```
 
-#### Custom search engines:
+#### 2. Custom search engines:
 ```kotlin
 Note: Custom Search Engine must provide their own Parser i.e implemention of SuggestionsParser interface
 
@@ -141,21 +141,9 @@ val googleService = SuggestionServiceBuilder()
 
 ```
 
-#### Enabling Caching
-
-```kotlin
-
-val cachedService = SuggestionServiceBuilder()
-    .withCaching() // Uses default cache config (TTL, size)
-    .build()
-
-val suggestions = cachedService.getSuggestions(SuggestionRequest("mango", 5))
-println(suggestions)
-```
-
 ### Custom Cache Configuration
 
-#### Custom cache size and duration:
+#### 1. Custom cache size and duration:
 ```kotlin
 
 //step 1 - create cache config
@@ -166,7 +154,7 @@ val service = SuggestionServiceBuilder()
     .withCaching(customCacheConfig) 
     .build()
 ```
-#### Custom cache implementation:
+#### 2. Custom cache implementation:
 ```kotlin
 //step 1 - Implement the Suggestion cache interface
 class CustomCacheImpl : SuggestionCache {
