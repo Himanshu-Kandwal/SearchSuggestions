@@ -3,11 +3,12 @@ package search_engine
 import network.HttpResult
 import network.NetworkClient
 import org.example.searchsuggestion.engine.SearchEngine
+import parser.GoogleSuggestionsParser
 import parser.SuggestionsParser
 import java.net.URLEncoder
 
 class GoogleSearchEngine(
-    private val networkClient: NetworkClient, private val parser: SuggestionsParser
+    private val networkClient: NetworkClient, private val parser: SuggestionsParser = GoogleSuggestionsParser()
 ) : SearchEngine {
 
     companion object {
