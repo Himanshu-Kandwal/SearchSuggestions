@@ -1,6 +1,8 @@
 package org.hk.CustomImplSamples
 
-import cache.CacheItemimport cache.SuggestionCache
+import cache.CacheItem
+import cache.SuggestionCache
+
 
 class CustomCacheImpl : SuggestionCache {
     override fun contains(key: String): Boolean {
